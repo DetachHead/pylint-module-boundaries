@@ -1,17 +1,17 @@
 [tool.poetry]
 authors = ["DetachHead <detachhead@users.noreply.github.com>"]
 description = ""
-name = "testpy"
+name = "pylint-module-boundaries"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pylint = { git = "https://github.com/DetachHead/pylint.git", rev = "c3b28952a4f5b3a57359e94738413724e262d082" }
 
 [tool.poetry.dev-dependencies]
 black = "^22"
 flake8 = "^6"
-basedmypy = "^1.6.1"
-pylint = "^2.15"
+basedmypy = { git = "https://github.com/KotlinIsland/basedmypy.git", rev = "0282dd46a77d72ee2efb58371be33874ef4e9a43" }
 pytest = "^7"
 
 [build-system]
