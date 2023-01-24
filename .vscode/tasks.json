@@ -61,7 +61,7 @@
       "label": "pylint - all files",
       "type": "shell",
       "command": "${command:python.interpreterPath}",
-      "args": ["-m", "pylint", "testpy"],
+      "args": ["-m", "pylint", "module_boundaries"],
       "presentation": {
         "clear": true
       }
