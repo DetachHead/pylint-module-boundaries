@@ -1,14 +1,21 @@
 [[package]]
 name = "astroid"
-version = "2.13.3"
+version = "2.14.0.dev0"
 description = "An abstract syntax tree for Python with inference support."
 category = "main"
 optional = false
 python-versions = ">=3.7.2"
+develop = false
 
 [package.dependencies]
-lazy-object-proxy = ">=1.4.0"
+lazy_object_proxy = ">=1.4.0"
 wrapt = {version = ">=1.14,<2", markers = "python_version >= \"3.11\""}
+
+[package.source]
+type = "git"
+url = "https://github.com/DetachHead/astroid.git"
+reference = "7a6c6e848b7830a9d49cf30459096d44eeec6099"
+resolved_reference = "7a6c6e848b7830a9d49cf30459096d44eeec6099"
 
 [[package]]
 name = "attrs"
@@ -36,13 +43,13 @@ develop = false
 
 [package.dependencies]
 basedtyping = ">=0.0.1"
-mypy-extensions = ">=0.4.3"
-typing-extensions = ">=3.10"
+mypy_extensions = ">=0.4.3"
+typing_extensions = ">=3.10"
 
 [package.extras]
 dmypy = ["psutil (>=4.0)"]
 install-types = ["pip"]
-python2 = ["typed-ast (>=1.4.0,<2)"]
+python2 = ["typed_ast (>=1.4.0,<2)"]
 reports = ["lxml"]
 
 [package.source]
@@ -297,13 +304,10 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "67fbcf2633b30f2dc6824143f4425bed9adb97da33980906f183e78db5f3b15a"
+content-hash = "3197cbb961395731eb2640886d998b348778a3cd1e166c1f45d81aa11ca79881"
 
 [metadata.files]
-astroid = [
-    {file = "astroid-2.13.3-py3-none-any.whl", hash = "sha256:14c1603c41cc61aae731cad1884a073c4645e26f126d13ac8346113c95577f3b"},
-    {file = "astroid-2.13.3.tar.gz", hash = "sha256:6afc22718a48a689ca24a97981ad377ba7fb78c133f40335dfd16772f29bcfb1"},
-]
+astroid = []
 attrs = [
     {file = "attrs-22.2.0-py3-none-any.whl", hash = "sha256:29e95c7f6778868dbd49170f98f8818f78f3dc5e0e37c0b1f474e3561b240836"},
     {file = "attrs-22.2.0.tar.gz", hash = "sha256:c9227bfc2f01993c03f68db37d1d15c9690188323c067c641f1a35ca58185f99"},
