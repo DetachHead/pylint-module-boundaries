@@ -57,7 +57,9 @@ class ModuleBoundariesChecker(BaseChecker):
                 and child.modname
                 and re.match(banned_imports[module_regex], child.modname)
             ):
-                self.add_message("banned-imports", node=child)
+                self.add_message(
+                    "banned-imports", node=child, args=(node.name, child.modname)
+                )
 
 
 def register(linter: PyLinter) -> None:
