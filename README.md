@@ -5,12 +5,10 @@ a pylint plugin to enforce boundaries between modules in your project. similar t
 
 ## example
 
-say you have three packages in your project: `common`, `package1` and `package2`. you want `package1` and
-`package2` to be able to import from the `common` package, but you don't want to
-allow `common` to import anything from the them, which would cause problems like circular
-dependencies.
+say you have three packages in your project - `common`, `package1`, and `package2` - you can use the `banned-imports` rule to prevent `common` from importing anything from `package1` or `package2`, thus avoiding issues such as circular dependencies.
 
-to fix this, you can define a `banned-imports` rule to allow pylint to detect such a thing:
+Pylint can then be used to detect any violations of this rule:
+
 ![](readme-images/img.png)
 
 see [usage](/#usage) below for a config example
