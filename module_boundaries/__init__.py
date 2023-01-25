@@ -52,6 +52,8 @@ class ModuleBoundariesChecker(BaseChecker):
             if (
                 isinstance(child, (nodes.Import, nodes.ImportFrom))
                 and module_regex
+                # type is wrong here? i don't think it can be `None` but actually the attribute doesn't exist
+                and hasattr(child, "modname")
                 and child.modname
                 and re.match(banned_imports[module_regex], child.modname)
             ):
