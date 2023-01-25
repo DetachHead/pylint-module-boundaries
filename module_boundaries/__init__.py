@@ -10,9 +10,9 @@ from pylint.lint import PyLinter
 class ModuleBoundariesChecker(BaseChecker):
     msgs = {
         "E5000": (
-            "banned imports",
+            "this module (`%s`) is not allowed to import from `%s`",
             "banned-imports",
-            "this module is not allowed to import from that module",
+            "used to enforce module boundaries in your project.",
         )
     }
 
@@ -22,8 +22,8 @@ class ModuleBoundariesChecker(BaseChecker):
             {
                 "default": "{}",
                 "type": "string",
-                "metavar": "<some nonsense>",
-                "help": "todo lol",
+                "metavar": "<a json object where the keys are regex patterns for modules that are not allowwed to import from the corresponding values' regex pattens>",
+                "help": 'for example: `{"foo.*": "bar.*"}` means that modules starting with "foo" can not import from modules starting with "bar"',
             },
         ),
     )
