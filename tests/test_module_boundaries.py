@@ -35,6 +35,7 @@ class TestBanned(UniqueReturnCheckerTestCase):
                 end_line=1,
                 end_col_offset=30,
                 col_offset=0,
+                args=("modules.foo", "modules.bar"),
             )
         ):
             self.visit()
