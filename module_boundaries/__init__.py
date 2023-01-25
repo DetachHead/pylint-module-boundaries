@@ -9,7 +9,7 @@ from pylint.lint import PyLinter
 
 class ModuleBoundariesChecker(BaseChecker):
     msgs = {
-        "B0001": (
+        "E0001": (
             "banned imports",
             "banned-imports",
             "this module is not allowed to import from that module",
