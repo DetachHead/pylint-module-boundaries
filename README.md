@@ -19,5 +19,5 @@ enable the plugin:
 ```toml
 # pyproject.toml
 [tool.pylint.MASTER]
-load-plugins = "module_boundaries"
+load-plugins = "pylint_module_boundaries"
 ```

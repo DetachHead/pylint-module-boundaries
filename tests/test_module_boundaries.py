@@ -3,11 +3,11 @@ import json
 import pylint.testutils
 from astroid.builder import AstroidBuilder
 
-import module_boundaries
+import pylint_module_boundaries
 
 
 class UniqueReturnCheckerTestCase(pylint.testutils.CheckerTestCase):
-    CHECKER_CLASS = module_boundaries.ModuleBoundariesChecker
+    CHECKER_CLASS = pylint_module_boundaries.ModuleBoundariesChecker
 
     node = AstroidBuilder().string_build(
         "from modules.bar import value", modname="modules.foo"

@@ -1,7 +1,7 @@
 [tool.poetry]
 authors = ["DetachHead <detachhead@users.noreply.github.com>"]
 description = ""
-name = "module_boundaries"
+name = "pytlint_module_boundaries"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
