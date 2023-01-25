@@ -9,7 +9,7 @@ this package is not yet published on pypi. for now just install it from github:
 ```toml
 # pyproject.toml
 [tool.poetry.group.dev.dependencies]
-module-boundaries = { git = "https://github.com/DetachHead/pylint-module-boundaries.git", rev = "master" }
+pylint-module-boundaries = { git = "https://github.com/DetachHead/pylint-module-boundaries.git", rev = "master" }
 ```
 
 ## usage
