@@ -45,26 +45,23 @@ class ModuleBoundariesChecker(BaseChecker):
     def visit_module(self, node: nodes.Module):
         banned_imports = self.banned_imports()
         for child in node.get_children():  # type:ignore[func-returns-value]
-            try:
-                module_regex = next(
-                    re.match(key, node.name) and key for key in banned_imports.keys()
-                )
-            except StopIteration:
-                module_regex = None
-            if (
-                isinstance(child, (nodes.Import, nodes.ImportFrom))
-                and module_regex
-                # type is wrong here? i don't think it can be `None` but actually the attribute doesn't exist
-                and hasattr(child, "modname")
-                and child.modname
-                and any(
-                    re.match(value, child.modname)
-                    for value in banned_imports[module_regex]
-                )
+            for module_regex in (
+                re.match(key, node.name) and key for key in banned_imports.keys()
             ):
-                self.add_message(
-                    "banned-imports", node=child, args=(node.name, child.modname)
-                )
+                if (
+                    isinstance(child, (nodes.Import, nodes.ImportFrom))
+                    and module_regex
+                    # type is wrong here? i don't think it can be `None` but actually the attribute doesn't exist
+                    and hasattr(child, "modname")
+                    and child.modname
+                    and any(
+                        re.match(value, child.modname)
+                        for value in banned_imports[module_regex]
+                    )
+                ):
+                    self.add_message(
+                        "banned-imports", node=child, args=(node.name, child.modname)
+                    )
 
 
 def register(linter: PyLinter) -> None:
