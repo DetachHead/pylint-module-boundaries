@@ -24,6 +24,7 @@ pylint-module-boundaries = { git = "https://github.com/DetachHead/pylint-module-
 ```
 
 ## usage
+
 ```toml
 # pyproject.toml
 [tool.pylint.MASTER]
@@ -31,8 +32,8 @@ load-plugins = "pylint_module_boundaries"
 # (currently uses regex but i want to replace it with something better in the future)
 banned-imports = '''
 {
-    "common(\\..*)?": "package1(\\..*)?",
-    "common(\\..*)?": "package2(\\..*)?"
+    "common(\\..*)?": ["package1(\\..*)?", "package2(\\..*)?"],
+    "scripts(\\..*)?": ["package1(\\..*)?", "package2(\\..*)?"]
 }
 '''
 ```
