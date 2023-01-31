@@ -12,7 +12,7 @@ pylint = { git = "https://github.com/DetachHead/pylint.git", rev = "c3b28952a4f5
 [tool.poetry.dev-dependencies]
 black = "^22"
 flake8 = "^6"
-basedmypy = { git = "https://github.com/KotlinIsland/basedmypy.git", rev = "0282dd46a77d72ee2efb58371be33874ef4e9a43" }
+basedmypy = { git = "https://github.com/KotlinIsland/basedmypy.git", rev = "master" }
 pytest = "^7"
 
 [build-system]
