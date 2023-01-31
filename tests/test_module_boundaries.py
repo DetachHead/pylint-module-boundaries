@@ -10,7 +10,8 @@ class UniqueReturnCheckerTestCase(pylint.testutils.CheckerTestCase):
     CHECKER_CLASS = pylint_module_boundaries.ModuleBoundariesChecker
 
     node = AstroidBuilder().string_build(
-        "from modules.bar import value", modname="modules.foo"
+        "from modules.bar import value\nfrom modules.baz import value",
+        modname="modules.foo",
     )
 
     def visit(self):
@@ -21,7 +22,9 @@ class TestBanned(UniqueReturnCheckerTestCase):
     CONFIG: dict[str, object] = {
         "banned_imports": json.dumps(
             {  # type:ignore[no-any-expr]
-                "modules\\.foo(\\..*)?": "modules\\.bar(\\..*)?",
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?"
+                ],
             }
         )
     }
@@ -37,6 +40,43 @@ class TestBanned(UniqueReturnCheckerTestCase):
                 col_offset=0,
                 args=("modules.foo", "modules.bar"),
             )
+        ):
+            self.visit()
+
+
+class TestMultipleBanned(UniqueReturnCheckerTestCase):
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?",
+                    "modules\\.baz(\\..*)?",
+                ],
+            }
+        )
+    }
+
+    def test_banned_module(self):
+        children = self.node.get_children()  # type:ignore[func-returns-value]
+        with self.assertAddsMessages(
+            pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
+                msg_id="banned-imports",
+                node=next(children),
+                line=1,
+                end_line=1,
+                end_col_offset=29,
+                col_offset=0,
+                args=("modules.foo", "modules.bar"),
+            ),
+            pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
+                msg_id="banned-imports",
+                node=next(children),
+                line=2,
+                end_line=1,
+                end_col_offset=29,
+                col_offset=0,
+                args=("modules.foo", "modules.baz"),
+            ),
         ):
             self.visit()
 

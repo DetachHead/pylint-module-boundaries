@@ -29,10 +29,12 @@ class ModuleBoundariesChecker(BaseChecker):
     )
 
     # TODO: make this a lazily loaded property or something
-    def banned_imports(self) -> dict[re.Pattern[str], re.Pattern[str]]:
+    def banned_imports(
+        self,
+    ) -> dict[re.Pattern[str], list[re.Pattern[str]]]:
         return {
-            re.compile(key): re.compile(value)
-            for key, value in cast(
+            re.compile(key): [re.compile(value) for value in values]
+            for key, values in cast(
                 dict[str, str],
                 json.loads(
                     self.linter.config.banned_imports  # type:ignore[no-any-expr]
@@ -55,7 +57,10 @@ class ModuleBoundariesChecker(BaseChecker):
                 # type is wrong here? i don't think it can be `None` but actually the attribute doesn't exist
                 and hasattr(child, "modname")
                 and child.modname
-                and re.match(banned_imports[module_regex], child.modname)
+                and any(
+                    re.match(value, child.modname)
+                    for value in banned_imports[module_regex]
+                )
             ):
                 self.add_message(
                     "banned-imports", node=child, args=(node.name, child.modname)
