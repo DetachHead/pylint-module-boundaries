@@ -27,12 +27,10 @@ class ModuleBoundariesChecker(BaseChecker):
             },
         ),
     )
+    banned_imports: dict[re.Pattern[str], list[re.Pattern[str]]]
 
-    # TODO: make this a lazily loaded property or something
-    def banned_imports(
-        self,
-    ) -> dict[re.Pattern[str], list[re.Pattern[str]]]:
-        return {
+    def open(self):
+        self.banned_imports = {
             re.compile(key): [re.compile(value) for value in values]
             for key, values in cast(
                 dict[str, str],
@@ -43,10 +41,9 @@ class ModuleBoundariesChecker(BaseChecker):
         }
 
     def visit_module(self, node: nodes.Module):
-        banned_imports = self.banned_imports()
         for child in node.get_children():  # type:ignore[func-returns-value]
             for module_regex in (
-                re.match(key, node.name) and key for key in banned_imports.keys()
+                re.match(key, node.name) and key for key in self.banned_imports.keys()
             ):
                 if (
                     isinstance(child, (nodes.Import, nodes.ImportFrom))
@@ -56,7 +53,7 @@ class ModuleBoundariesChecker(BaseChecker):
                     and child.modname
                     and any(
                         re.match(value, child.modname)
-                        for value in banned_imports[module_regex]
+                        for value in self.banned_imports[module_regex]
                     )
                 ):
                     self.add_message(
