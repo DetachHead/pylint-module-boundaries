@@ -24,7 +24,7 @@ class TestBanned(UniqueReturnCheckerTestCase):
             {  # type:ignore[no-any-expr]
                 "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
                     "modules\\.bar(\\..*)?"
-                ],
+                ]
             }
         )
     }
@@ -51,7 +51,7 @@ class TestMultipleBannedInOneFile(UniqueReturnCheckerTestCase):
                 "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
                     "modules\\.bar(\\..*)?",
                     "modules\\.baz(\\..*)?",
-                ],
+                ]
             }
         )
     }
@@ -86,12 +86,10 @@ class TestOneBannedInMultipleFiles(pylint.testutils.CheckerTestCase):
 
     nodes = [
         AstroidBuilder().string_build(
-            "from modules.baz import value",
-            modname="modules.foo",
+            "from modules.baz import value", modname="modules.foo"
         ),
         AstroidBuilder().string_build(
-            "from modules.baz import value",
-            modname="modules.bar",
+            "from modules.baz import value", modname="modules.bar"
         ),
     ]
 
@@ -103,10 +101,10 @@ class TestOneBannedInMultipleFiles(pylint.testutils.CheckerTestCase):
         "banned_imports": json.dumps(
             {  # type:ignore[no-any-expr]
                 "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
-                    "modules\\.baz(\\..*)?",
+                    "modules\\.baz(\\..*)?"
                 ],
                 "modules\\.bar(\\..*)?": [  # type:ignore[no-any-expr]
-                    "modules\\.baz(\\..*)?",
+                    "modules\\.baz(\\..*)?"
                 ],
             }
         )
