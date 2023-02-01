@@ -7,6 +7,7 @@
   "git.rebaseWhenSync": true,
   "git.suggestSmartCommit": false,
   "git.supportCancellation": true,
+  "git.useEditorAsCommitInput": false,
   "diffEditor.ignoreTrimWhitespace": false,
   "python.linting.mypyArgs": ["--show-column-numbers"],
   "python.formatting.provider": "black",
