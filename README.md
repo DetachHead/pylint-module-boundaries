@@ -15,12 +15,8 @@ see [usage](/#usage) below for a config example
 
 ## installing
 
-this package is not yet published on pypi. for now just install it from github:
-
-```toml
-# pyproject.toml
-[tool.poetry.group.dev.dependencies]
-pylint-module-boundaries = { git = "https://github.com/DetachHead/pylint-module-boundaries.git", rev = "master" }
+```
+poetry install pylint-module-boundaries
 ```
 
 ## usage
