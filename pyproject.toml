@@ -6,8 +6,7 @@ version = "1.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-astroid = { git = "https://github.com/DetachHead/astroid.git", rev = "7a6c6e848b7830a9d49cf30459096d44eeec6099" }
-pylint = { git = "https://github.com/DetachHead/pylint.git", rev = "c3b28952a4f5b3a57359e94738413724e262d082" }
+pylint = "^2"
 
 [tool.poetry.dev-dependencies]
 black = "^22"
@@ -72,3 +71,7 @@ xfail_strict = true
 [tool.mypy]
 allow_redefinition = true
 default_return = true
+
+[[tool.mypy.overrides]]
+module = ["pylint.*", "astroid.*"]
+ignore_missing_py_typed = true
