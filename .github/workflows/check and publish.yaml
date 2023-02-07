@@ -45,6 +45,7 @@ jobs:
       - run: poetry build
       - run: poetry publish
       - name: get version number
+        id: current-version
         run: echo ::set-output name=CURRENT_VERSION::$(poetry version -s)
       - uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
