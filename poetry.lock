@@ -37,7 +37,7 @@ tests-no-zope = ["cloudpickle", "cloudpickle", "hypothesis", "hypothesis", "mypy
 
 [[package]]
 name = "basedmypy"
-version = "1.7.0+dev.e24b373f2cbb74275b548fc6b6b51e70a9f1cb34"
+version = "1.7.0+dev.9a9126a0e19a8c77c0d2c32da208db6032156a9b"
 description = "Based static typing for Python"
 category = "dev"
 optional = false
@@ -495,4 +495,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e4fb8501a4d68778f605c30b35c0a6654d452d884bb1cbeaf312f4d8a0c9e28a"
+content-hash = "e04d24fc0880562ad9f2f459b683c29716a8498b7cb6c32638e26a983eb94d3e"
