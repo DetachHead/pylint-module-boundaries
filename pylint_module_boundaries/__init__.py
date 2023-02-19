@@ -40,25 +40,31 @@ class ModuleBoundariesChecker(BaseChecker):
             ).items()
         }
 
-    def visit_module(self, node: nodes.Module):
-        for child in node.get_children():  # type:ignore[func-returns-value]
-            for module_regex in (
-                re.match(key, node.name) and key for key in self.banned_imports.keys()
+    def _visit_import(self, node: nodes.Import | nodes.ImportFrom):
+        # type is wrong here? i don't think it can be `None` but actually the attribute doesn't exist
+        if not hasattr(node, "modname"):
+            return
+        current_module = node.root().name
+        for module_regex in (
+            re.match(key, current_module) and key for key in self.banned_imports.keys()
+        ):
+            if (
+                module_regex
+                and node.modname
+                and any(
+                    re.match(value, node.modname)
+                    for value in self.banned_imports[module_regex]
+                )
             ):
-                if (
-                    isinstance(child, (nodes.Import, nodes.ImportFrom))
-                    and module_regex
-                    # type is wrong here? i don't think it can be `None` but actually the attribute doesn't exist
-                    and hasattr(child, "modname")
-                    and child.modname
-                    and any(
-                        re.match(value, child.modname)
-                        for value in self.banned_imports[module_regex]
-                    )
-                ):
-                    self.add_message(
-                        "banned-imports", node=child, args=(node.name, child.modname)
-                    )
+                self.add_message(
+                    "banned-imports", node=node, args=(current_module, node.modname)
+                )
+
+    def visit_importfrom(self, node: nodes.ImportFrom):
+        self._visit_import(node)
+
+    def visit_import(self, node: nodes.Import):
+        self._visit_import(node)
 
 
 def register(linter: PyLinter) -> None:
