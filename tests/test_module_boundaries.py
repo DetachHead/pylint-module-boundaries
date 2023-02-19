@@ -1,12 +1,14 @@
 import json
+from typing import cast
 
 import pylint.testutils
+from astroid import nodes
 from astroid.builder import AstroidBuilder
 
 import pylint_module_boundaries
 
 
-class UniqueReturnCheckerTestCase(pylint.testutils.CheckerTestCase):
+class ModuleBoundariesTestCase(pylint.testutils.CheckerTestCase):
     CHECKER_CLASS = pylint_module_boundaries.ModuleBoundariesChecker
 
     node = AstroidBuilder().string_build(
@@ -15,10 +17,10 @@ class UniqueReturnCheckerTestCase(pylint.testutils.CheckerTestCase):
     )
 
     def visit(self):
-        self.checker.visit_module(self.node)  # type:ignore[no-any-expr]
+        self.walk(self.node)
 
 
-class TestBanned(UniqueReturnCheckerTestCase):
+class TestBanned(ModuleBoundariesTestCase):
     CONFIG: dict[str, object] = {
         "banned_imports": json.dumps(
             {  # type:ignore[no-any-expr]
@@ -44,7 +46,7 @@ class TestBanned(UniqueReturnCheckerTestCase):
             self.visit()
 
 
-class TestMultipleBannedInOneFile(UniqueReturnCheckerTestCase):
+class TestMultipleBannedInOneFile(ModuleBoundariesTestCase):
     CONFIG: dict[str, object] = {
         "banned_imports": json.dumps(
             {  # type:ignore[no-any-expr]
@@ -95,7 +97,7 @@ class TestOneBannedInMultipleFiles(pylint.testutils.CheckerTestCase):
 
     def visit(self):
         for node in self.nodes:
-            self.checker.visit_module(node)  # type:ignore[no-any-expr]
+            self.walk(node)
 
     CONFIG: dict[str, object] = {
         "banned_imports": json.dumps(
@@ -138,7 +140,44 @@ class TestOneBannedInMultipleFiles(pylint.testutils.CheckerTestCase):
             self.visit()
 
 
-class TestAllowed(UniqueReturnCheckerTestCase):
+class TestAllowed(ModuleBoundariesTestCase):
     def test_allowed_module(self):
         with self.assertNoMessages():
+            self.visit()
+
+
+class TestConditionalImportBanned(ModuleBoundariesTestCase):
+    node = AstroidBuilder().string_build(
+        "if True:\n"
+        "   from modules.bar import value\n"
+        "   from modules.baz import value",
+        modname="modules.foo",
+    )
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?"
+                ]
+            }
+        )
+    }
+
+    def test_conditional_import_banned_module(self):
+        with self.assertAddsMessages(
+            pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
+                msg_id="banned-imports",
+                node=cast(
+                    nodes.If,
+                    next(
+                        self.node.get_children()  # type:ignore[func-returns-value]
+                    ),
+                ).body[0],
+                line=2,
+                end_line=2,
+                end_col_offset=32,
+                col_offset=3,
+                args=("modules.foo", "modules.bar"),
+            )
+        ):
             self.visit()
