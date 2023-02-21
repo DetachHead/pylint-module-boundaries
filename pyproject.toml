@@ -2,7 +2,7 @@
 authors = ["DetachHead <detachhead@users.noreply.github.com>"]
 description = ""
 name = "pylint_module_boundaries"
-version = "1.1.0"
+version = "1.2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
