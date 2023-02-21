@@ -1,6 +1,6 @@
 import json
 import re
-from typing import cast
+from typing import Iterable, cast
 
 from astroid import nodes
 from pylint.checkers.base_checker import BaseChecker
@@ -47,12 +47,8 @@ class ModuleBoundariesChecker(BaseChecker):
             ).items()
         }
 
-    def _visit_import(self, node: nodes.Import | nodes.ImportFrom):
+    def _check_imports(self, node: nodes.NodeNG, import_full_names: Iterable[str]):
         current_module = node.root().name
-        import_full_names = [
-            f"{node.modname}.{name}" if isinstance(node, nodes.ImportFrom) else name
-            for [name, _] in node.names
-        ]
         for module_regex in (
             re.fullmatch(key, current_module) and key
             for key in self.banned_imports.keys()
@@ -73,10 +69,16 @@ class ModuleBoundariesChecker(BaseChecker):
                     )
 
     def visit_importfrom(self, node: nodes.ImportFrom):
-        self._visit_import(node)
+        self._check_imports(
+            node, [f"{node.modname}.{name}" for [name, _] in node.names]
+        )
 
     def visit_import(self, node: nodes.Import):
-        self._visit_import(node)
+        self._check_imports(node, [name for [name, _] in node.names])
+
+    def visit_attribute(self, node: nodes.Attribute):
+        if isinstance(node.expr, nodes.Name):
+            self._check_imports(node, [f"{node.expr.name}.{cast(str, node.attrname)}"])
 
 
 def register(linter: PyLinter) -> None:

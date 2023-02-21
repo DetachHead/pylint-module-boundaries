@@ -288,3 +288,39 @@ class TestNotFullMatchAllowed(ModuleBoundariesTestCase):
     def test_not_full_match_allowed(self):
         with self.assertNoMessages():
             self.visit()
+
+
+class TestUsageBanned(ModuleBoundariesTestCase):
+    node = AstroidBuilder().string_build(
+        "import modules\nmodules.bar\nmodules.baz", modname="modules.foo"
+    )
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?"
+                ]
+            }
+        )
+    }
+
+    def test_usage_banned(self):
+        with self.assertAddsMessages(
+            pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
+                msg_id="banned-imports",
+                node=cast(
+                    nodes.Expr,
+                    list(
+                        self.node.get_children()  # type:ignore[func-returns-value]
+                    )[
+                        1
+                    ],
+                ).value,
+                line=2,
+                end_line=2,
+                end_col_offset=11,
+                col_offset=0,
+                args=("modules.foo", "modules.bar"),
+            )
+        ):
+            self.visit()
