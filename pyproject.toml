@@ -10,7 +10,7 @@ python = "^3.11"
 pylint = "^2"
 
 [tool.poetry.dev-dependencies]
-black = "^22"
+black = "^23"
 flake8 = "^6"
 basedmypy = { git = "https://github.com/KotlinIsland/basedmypy.git", rev = "master" }
 pytest = "^7"
@@ -31,6 +31,7 @@ combine_as_imports = true
 [tool.black]
 target-version = ["py311"]
 skip-magic-trailing-comma = true
+preview = true
 
 [tool.pylint.MASTER]
 fail-on = "I"
