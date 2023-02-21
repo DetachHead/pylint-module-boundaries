@@ -10,7 +10,7 @@ from pylint.lint import PyLinter
 class ModuleBoundariesChecker(BaseChecker):
     msgs = {
         "E5000": (
-            "this module (`%s`) is not allowed to import from `%s`",
+            "this module (`%s`) is not allowed to import `%s`",
             "banned-imports",
             "used to enforce module boundaries in your project.",
         )
@@ -41,24 +41,28 @@ class ModuleBoundariesChecker(BaseChecker):
         }
 
     def _visit_import(self, node: nodes.Import | nodes.ImportFrom):
-        # type is wrong here? i don't think it can be `None` but actually the attribute doesn't exist
-        if not hasattr(node, "modname"):
-            return
         current_module = node.root().name
+        import_full_names = [
+            f"{node.modname}.{name}" if isinstance(node, nodes.ImportFrom) else name
+            for [name, _] in node.names
+        ]
         for module_regex in (
             re.match(key, current_module) and key for key in self.banned_imports.keys()
         ):
-            if (
-                module_regex
-                and node.modname
-                and any(
-                    re.match(value, node.modname)
-                    for value in self.banned_imports[module_regex]
-                )
-            ):
-                self.add_message(
-                    "banned-imports", node=node, args=(current_module, node.modname)
-                )
+            for import_full_name in import_full_names:
+                if (
+                    module_regex
+                    and import_full_name
+                    and any(
+                        re.match(value, import_full_name)
+                        for value in self.banned_imports[module_regex]
+                    )
+                ):
+                    self.add_message(
+                        "banned-imports",
+                        node=node,
+                        args=(current_module, import_full_name),
+                    )
 
     def visit_importfrom(self, node: nodes.ImportFrom):
         self._visit_import(node)

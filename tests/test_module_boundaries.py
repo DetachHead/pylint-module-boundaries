@@ -20,7 +20,7 @@ class ModuleBoundariesTestCase(pylint.testutils.CheckerTestCase):
         self.walk(self.node)
 
 
-class TestBanned(ModuleBoundariesTestCase):
+class TestImportFromBanned(ModuleBoundariesTestCase):
     CONFIG: dict[str, object] = {
         "banned_imports": json.dumps(
             {  # type:ignore[no-any-expr]
@@ -31,7 +31,7 @@ class TestBanned(ModuleBoundariesTestCase):
         )
     }
 
-    def test_banned_module(self):
+    def test_import_from_banned_module(self):
         with self.assertAddsMessages(
             pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
                 msg_id="banned-imports",
@@ -39,6 +39,37 @@ class TestBanned(ModuleBoundariesTestCase):
                 line=1,
                 end_line=1,
                 end_col_offset=30,
+                col_offset=0,
+                args=("modules.foo", "modules.bar.value"),
+            )
+        ):
+            self.visit()
+
+
+class TestImportBanned(ModuleBoundariesTestCase):
+    node = AstroidBuilder().string_build(
+        "import modules.bar\nimport modules.baz", modname="modules.foo"
+    )
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?"
+                ]
+            }
+        )
+    }
+
+    def test_import_banned_module(self):
+        with self.assertAddsMessages(
+            pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
+                msg_id="banned-imports",
+                node=next(
+                    self.node.get_children()  # type:ignore[func-returns-value]
+                ),
+                line=1,
+                end_line=1,
+                end_col_offset=28,
                 col_offset=0,
                 args=("modules.foo", "modules.bar"),
             )
@@ -68,7 +99,7 @@ class TestMultipleBannedInOneFile(ModuleBoundariesTestCase):
                 end_line=1,
                 end_col_offset=29,
                 col_offset=0,
-                args=("modules.foo", "modules.bar"),
+                args=("modules.foo", "modules.bar.value"),
             ),
             pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
                 msg_id="banned-imports",
@@ -77,7 +108,7 @@ class TestMultipleBannedInOneFile(ModuleBoundariesTestCase):
                 end_line=1,
                 end_col_offset=29,
                 col_offset=0,
-                args=("modules.foo", "modules.baz"),
+                args=("modules.foo", "modules.baz.value"),
             ),
         ):
             self.visit()
@@ -123,7 +154,7 @@ class TestOneBannedInMultipleFiles(pylint.testutils.CheckerTestCase):
                 end_line=1,
                 end_col_offset=29,
                 col_offset=0,
-                args=("modules.foo", "modules.baz"),
+                args=("modules.foo", "modules.baz.value"),
             ),
             pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
                 msg_id="banned-imports",
@@ -134,7 +165,7 @@ class TestOneBannedInMultipleFiles(pylint.testutils.CheckerTestCase):
                 end_line=1,
                 end_col_offset=29,
                 col_offset=0,
-                args=("modules.bar", "modules.baz"),
+                args=("modules.bar", "modules.baz.value"),
             ),
         ):
             self.visit()
@@ -177,6 +208,68 @@ class TestConditionalImportBanned(ModuleBoundariesTestCase):
                 end_line=2,
                 end_col_offset=32,
                 col_offset=3,
+                args=("modules.foo", "modules.bar.value"),
+            )
+        ):
+            self.visit()
+
+
+class TestModuleImportBanned(ModuleBoundariesTestCase):
+    node = AstroidBuilder().string_build(
+        "from modules import bar\nfrom modules import baz", modname="modules.foo"
+    )
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?"
+                ]
+            }
+        )
+    }
+
+    def test_module_import_banned_module(self):
+        with self.assertAddsMessages(
+            pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
+                msg_id="banned-imports",
+                node=next(
+                    self.node.get_children()  # type:ignore[func-returns-value]
+                ),
+                line=1,
+                end_line=1,
+                end_col_offset=23,
+                col_offset=0,
+                args=("modules.foo", "modules.bar"),
+            )
+        ):
+            self.visit()
+
+
+class TestMultipleModuleImportBanned(ModuleBoundariesTestCase):
+    node = AstroidBuilder().string_build(
+        "from modules import bar, baz", modname="modules.foo"
+    )
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?"
+                ]
+            }
+        )
+    }
+
+    def test_multiple_module_import_banned_module(self):
+        with self.assertAddsMessages(
+            pylint.testutils.MessageTest(  # type:ignore[no-any-expr]
+                msg_id="banned-imports",
+                node=next(
+                    self.node.get_children()  # type:ignore[func-returns-value]
+                ),
+                line=1,
+                end_line=1,
+                end_col_offset=28,
+                col_offset=0,
                 args=("modules.foo", "modules.bar"),
             )
         ):
