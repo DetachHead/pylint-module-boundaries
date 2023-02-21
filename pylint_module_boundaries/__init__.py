@@ -22,8 +22,15 @@ class ModuleBoundariesChecker(BaseChecker):
             {
                 "default": "{}",
                 "type": "string",
-                "metavar": "<a json object where the keys are regex patterns for modules that are not allowed to import from the corresponding values' regex pattens. the regexes must be a full match>",
-                "help": 'for example: `{"foo.*": "bar.*"}` means that modules starting with "foo" can not import from modules starting with "bar"',
+                "metavar": (
+                    "<a json object where the keys are regex patterns for modules that"
+                    " are not allowed to import from the corresponding values' regex"
+                    " pattens. the regexes must be a full match>"
+                ),
+                "help": (
+                    'for example: `{"foo.*": "bar.*"}` means that modules starting with'
+                    ' "foo" can not import from modules starting with "bar"'
+                ),
             },
         ),
     )

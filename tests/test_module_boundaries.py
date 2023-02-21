@@ -179,9 +179,7 @@ class TestAllowed(ModuleBoundariesTestCase):
 
 class TestConditionalImportBanned(ModuleBoundariesTestCase):
     node = AstroidBuilder().string_build(
-        "if True:\n"
-        "   from modules.bar import value\n"
-        "   from modules.baz import value",
+        "if True:\n   from modules.bar import value\n   from modules.baz import value",
         modname="modules.foo",
     )
     CONFIG: dict[str, object] = {
