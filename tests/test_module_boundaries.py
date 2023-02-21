@@ -274,3 +274,19 @@ class TestMultipleModuleImportBanned(ModuleBoundariesTestCase):
             )
         ):
             self.visit()
+
+
+class TestNotFullMatchAllowed(ModuleBoundariesTestCase):
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.f(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.b(\\..*)?"
+                ]
+            }
+        )
+    }
+
+    def test_not_full_match_allowed(self):
+        with self.assertNoMessages():
+            self.visit()

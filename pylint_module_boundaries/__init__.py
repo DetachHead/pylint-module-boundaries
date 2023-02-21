@@ -22,7 +22,7 @@ class ModuleBoundariesChecker(BaseChecker):
             {
                 "default": "{}",
                 "type": "string",
-                "metavar": "<a json object where the keys are regex patterns for modules that are not allowwed to import from the corresponding values' regex pattens>",
+                "metavar": "<a json object where the keys are regex patterns for modules that are not allowed to import from the corresponding values' regex pattens. the regexes must be a full match>",
                 "help": 'for example: `{"foo.*": "bar.*"}` means that modules starting with "foo" can not import from modules starting with "bar"',
             },
         ),
@@ -47,14 +47,15 @@ class ModuleBoundariesChecker(BaseChecker):
             for [name, _] in node.names
         ]
         for module_regex in (
-            re.match(key, current_module) and key for key in self.banned_imports.keys()
+            re.fullmatch(key, current_module) and key
+            for key in self.banned_imports.keys()
         ):
             for import_full_name in import_full_names:
                 if (
                     module_regex
                     and import_full_name
                     and any(
-                        re.match(value, import_full_name)
+                        re.fullmatch(value, import_full_name)
                         for value in self.banned_imports[module_regex]
                     )
                 ):
