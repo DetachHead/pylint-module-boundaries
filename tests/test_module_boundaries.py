@@ -324,3 +324,23 @@ class TestUsageBanned(ModuleBoundariesTestCase):
             )
         ):
             self.visit()
+
+
+class TestUsageAllowed(ModuleBoundariesTestCase):
+    node = AstroidBuilder().string_build(
+        "import modules\nmodules.bar\nmodules.baz", modname="modules.foo"
+    )
+    CONFIG: dict[str, object] = {
+        "banned_imports": json.dumps(
+            {  # type:ignore[no-any-expr]
+                "modules\\.foo(\\..*)?": [  # type:ignore[no-any-expr]
+                    "modules\\.bar(\\..*)?"
+                ]
+            }
+        ),
+        "banned_imports_check_usages": False,
+    }
+
+    def test_usage_allowed(self):
+        with self.assertNoMessages():
+            self.visit()
