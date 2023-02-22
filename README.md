@@ -21,15 +21,23 @@ poetry install pylint-module-boundaries
 
 ## usage
 
+### `pyproject.toml` example
+
 ```toml
-# pyproject.toml
 [tool.pylint.MASTER]
 load-plugins = "pylint_module_boundaries"
-# these regexes must be a full match:
 banned-imports = '''
 {
     "common(\\..*)?": ["package1(\\..*)?", "package2(\\..*)?"],
     "scripts(\\..*)?": ["package1(\\..*)?", "package2(\\..*)?"]
 }
 '''
+banned-imports-check-usages = true
 ```
+
+### options
+
+| option                        | type      | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | default |
+| ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| `banned-imports`              | `string`  | a JSON object pairing regexes matching modules to arrays of regexes matching modules that they are not allowed to import from. due to the limitations in config types allowed by pylint, this has to be a JSON object represented as a string.<br /><br />note that these regexes must be a full match, so to match any submodules you should append `(\\..*)?` to the regex (double `\` required because it's JSON).<br /><br />yes, i know this option is quite annoying to use but its purpose is to be as flexible as possible. i plan to add an easier to use option in the future that covers most basic use cases. see [this issue](https://github.com/DetachHead/pylint-module-boundaries/issues/10) | `{}`    |
+| `banned-imports-check-usages` | `boolean` | whether usages of the imports should be checked as well as the imports themselves. works on imports of entire modules but can potentially cause false positives depending on your use case                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `true`  |
