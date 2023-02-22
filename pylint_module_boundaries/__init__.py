@@ -33,8 +33,21 @@ class ModuleBoundariesChecker(BaseChecker):
                 ),
             },
         ),
+        (
+            "banned-imports-check-usages",
+            {
+                "default": True,
+                "type": "yn",
+                "help": (
+                    "whether usages of the imports should be checked as well as the"
+                    " imports themselves. works on imports of entire modules but can"
+                    " potentially cause false positives"
+                ),
+            },
+        ),
     )
     banned_imports: dict[re.Pattern[str], list[re.Pattern[str]]]
+    check_usages: bool
 
     def open(self):
         self.banned_imports = {
@@ -46,6 +59,9 @@ class ModuleBoundariesChecker(BaseChecker):
                 ),
             ).items()
         }
+        self.check_usages = (
+            self.linter.config.banned_imports_check_usages  # type:ignore[no-any-expr]
+        )
 
     def _check_imports(self, node: nodes.NodeNG, import_full_names: Iterable[str]):
         current_module = node.root().name
@@ -77,7 +93,7 @@ class ModuleBoundariesChecker(BaseChecker):
         self._check_imports(node, [name for [name, _] in node.names])
 
     def visit_attribute(self, node: nodes.Attribute):
-        if isinstance(node.expr, nodes.Name):
+        if self.check_usages and isinstance(node.expr, nodes.Name):
             self._check_imports(node, [f"{node.expr.name}.{cast(str, node.attrname)}"])
 
 
