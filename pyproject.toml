@@ -1,9 +1,11 @@
 [tool.poetry]
 authors = ["DetachHead <detachhead@users.noreply.github.com>"]
-description = ""
+description = "a pylint plugin to enforce restrictions on imports within your project, similar to nx's enforce-module-boundaries eslint plugin "
 name = "pylint_module_boundaries"
 version = "1.2.1"
 readme = "README.md"
+repository = "https://github.com/detachhead/pylint-module-boundaries"
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
