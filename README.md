@@ -9,7 +9,7 @@ say you have three packages in your project - `common`, `package1`, and `package
 
 Pylint can then be used to detect any violations of this rule:
 
-![](readme-images/img.png)
+![](https://github.com/DetachHead/pylint-module-boundaries/raw/master/readme-images/img.png)
 
 see [usage](/#usage) below for a config example
 
