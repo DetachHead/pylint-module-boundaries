@@ -14,7 +14,7 @@ pylint = "^2"
 [tool.poetry.dev-dependencies]
 black = "^23"
 flake8 = "^6"
-basedmypy = { git = "https://github.com/KotlinIsland/basedmypy.git", rev = "master" }
+basedmypy = "^1.7.0rc1"
 pytest = "^7"
 isort = "^5.12.0"
 
