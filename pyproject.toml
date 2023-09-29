@@ -9,7 +9,7 @@ repository = "https://github.com/detachhead/pylint-module-boundaries"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pylint = "^2"
+pylint = ">=2 <4"
 
 [tool.poetry.dev-dependencies]
 black = "^23"
