@@ -38,7 +38,7 @@ class TestImportFromBanned(ModuleBoundariesTestCase):
                 node=next(self.node.get_children()),  # type:ignore[func-returns-value]
                 line=1,
                 end_line=1,
-                end_col_offset=30,
+                end_col_offset=29,
                 col_offset=0,
                 args=("modules.foo", "modules.bar.value"),
             )
@@ -69,7 +69,7 @@ class TestImportBanned(ModuleBoundariesTestCase):
                 ),
                 line=1,
                 end_line=1,
-                end_col_offset=28,
+                end_col_offset=18,
                 col_offset=0,
                 args=("modules.foo", "modules.bar"),
             )
@@ -105,7 +105,7 @@ class TestMultipleBannedInOneFile(ModuleBoundariesTestCase):
                 msg_id="banned-imports",
                 node=next(children),
                 line=2,
-                end_line=1,
+                end_line=2,
                 end_col_offset=29,
                 col_offset=0,
                 args=("modules.foo", "modules.baz.value"),
