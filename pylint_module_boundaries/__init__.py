@@ -94,7 +94,7 @@ class ModuleBoundariesChecker(BaseChecker):
 
     def visit_attribute(self, node: nodes.Attribute):
         if self.check_usages and isinstance(node.expr, nodes.Name):
-            self._check_imports(node, [f"{node.expr.name}.{cast(str, node.attrname)}"])
+            self._check_imports(node, [f"{node.expr.name}.{node.attrname}"])
 
 
 def register(linter: PyLinter) -> None:
