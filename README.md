@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> this project is now deprecated and no longer maintained. there are now much better tools available for enforcing module boundaries:
+> - [DTach](https://detachhead.github.io/dtach) - also maintained by me
+> - [ruff](https://docs.astral.sh/ruff/) - has a rule to ban imports, however it [has some limitations](https://github.com/astral-sh/ruff/issues/7696#issuecomment-1780479743)
+
 # pylint module boundaries
 
 a pylint plugin to enforce boundaries between modules in your project. similar to nx's
